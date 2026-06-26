@@ -1,4 +1,4 @@
-# Digital Signature Capstone
+# Digital Signature
 
 Nền tảng chữ ký số **PAdES-LT** cho Cổng Dịch vụ Hành chính Công, xây dựng cho đồ án môn **NT219 – Mật mã học**.
 
