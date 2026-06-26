@@ -230,18 +230,6 @@ powershell -NoProfile `
 - Chưa có Keycloak production hoặc eID federation.
 - Không dùng trực tiếp trong production.
 
-## GitHub và bảo mật
-
-Không commit `.env`, private key, token database, PIN, secret, dữ liệu hồ sơ, OTP, nonce, signing job, log, audit runtime hoặc `node_modules`.
-
-```powershell
-git init
-git add .
-git status
-```
-
-Không sử dụng `git add -f` để ép các file bí mật vào repository.
-
 ## License
 
 MIT License. Chỉ phục vụ học tập, nghiên cứu và trình diễn kỹ thuật.
