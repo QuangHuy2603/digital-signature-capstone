@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { findCertificatesByOfficerId } from "../src/services/certificate.repository.js";
 import { findOfficerByOfficerId } from "../src/services/officer-account.service.js";
-import { atomicWriteJsonSync } from "../src/utils/atomic-file.util.js";
+import { atomicWriteJsonSync, readJsonFileSync } from "../src/utils/atomic-file.util.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,7 +12,13 @@ const backendRoot = path.resolve(__dirname, "..");
 const projectRoot = path.resolve(backendRoot, "..");
 const users = JSON.parse(fs.readFileSync(path.join(backendRoot, "src/data/users.json"), "utf8"));
 const officers = users.filter((user) => Array.isArray(user.roles) && user.roles.includes("officer"));
-const output = [];
+const registryPath = path.join(projectRoot, "client-agent/storage/certificates.json");
+const existingRegistry = readJsonFileSync(registryPath, []);
+const output = existingRegistry.filter(
+    (item) => String(
+        item.signer_type || (item.citizen_id ? "citizen" : "officer")
+    ) !== "officer"
+);
 for (const user of officers) {
     const officer = findOfficerByOfficerId(user.officer_id);
     const localCertificateId = user.local_certificate_id || user.active_certificate_id || null;
@@ -52,5 +58,5 @@ for (const user of officers) {
         });
     }
 }
-atomicWriteJsonSync(path.join(projectRoot, "client-agent/storage/certificates.json"), output, { backup: true });
+atomicWriteJsonSync(registryPath, output, { backup: true });
 console.log(JSON.stringify({ synced: output.length, certificates: output.map((item) => item.certificate_id) }, null, 2));

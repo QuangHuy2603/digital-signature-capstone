@@ -128,6 +128,18 @@ try {
         }
     }
 
+    Push-Location $backend
+    try {
+        npm.cmd run client-agent:sync-certificates
+
+        if ($LASTEXITCODE -ne 0) {
+            throw "Client Agent certificate synchronization failed"
+        }
+    }
+    finally {
+        Pop-Location
+    }
+    
     Write-Host "`nDEMO SETUP: PASS" -ForegroundColor Green
     Write-Host "Run: npm.cmd start" -ForegroundColor Cyan
 } finally {
